@@ -53,7 +53,7 @@ contract SushiBar is ERC20("SushiBar", "xSUSHI") {
         uint256 unlockDate = block.timestamp + (numDays * 1 days);
 
         if (unlockDate <= (createDate + 2 days)) {
-            amount = what * 0; // 100% taxed
+            amount = what * 0; // 100% taxed or locked
         } else if (unlockDate <= (createDate + 4 days)) {
             amount = what / 4; // 75% taxed
         } else if (unlockDate <= (createDate + 6 days)) {
