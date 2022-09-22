@@ -36,7 +36,7 @@ describe("SushiBar", function () {
   it("should not allow withdraw more than what you have", async function () {
     await this.sushi.approve(this.bar.address, "100");
     await this.bar.enter("100");
-    await expect(this.bar.leave("200")).to.be.revertedWith(
+    await expect(this.bar.leave("200", "9")).to.be.revertedWith(
       "ERC20: burn amount exceeds balance"
     );
   });
@@ -61,11 +61,13 @@ describe("SushiBar", function () {
     expect(await this.bar.balanceOf(this.alice.address)).to.equal("26");
     expect(await this.bar.balanceOf(this.bob.address)).to.equal("10");
     // Bob withdraws 5 shares. He should receive 5*60/36 = 8 shares
-    await this.bar.connect(this.bob).leave("5", { from: this.bob.address });
+    await this.bar
+      .connect(this.bob)
+      .leave("5", "9", { from: this.bob.address });
     expect(await this.bar.balanceOf(this.alice.address)).to.equal("26");
     expect(await this.bar.balanceOf(this.bob.address)).to.equal("5");
-    expect(await this.sushi.balanceOf(this.bar.address)).to.equal("60");
+    expect(await this.sushi.balanceOf(this.bar.address)).to.equal("52");
     expect(await this.sushi.balanceOf(this.alice.address)).to.equal("70");
-    expect(await this.sushi.balanceOf(this.bob.address)).to.equal("90");
+    expect(await this.sushi.balanceOf(this.bob.address)).to.equal("98");
   });
 });

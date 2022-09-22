@@ -40,7 +40,7 @@ contract SushiBar is ERC20("SushiBar", "xSUSHI") {
 
     // Leave the bar. Claim back your SUSHIs.
     // Unlocks the staked + gained Sushi and burns xSushi
-    function leave(uint256 _share) public {
+    function leave(uint256 _share, uint256 numDays) public {
         // Gets the amount of xSushi in existence
         uint256 totalShares = totalSupply();
         // Calculates the amount of Sushi the xSushi is worth
@@ -49,13 +49,16 @@ contract SushiBar is ERC20("SushiBar", "xSUSHI") {
         );
 
         uint256 amount;
-        if (block.timestamp <= (block.timestamp + 2 days)) {
+        uint256 createDate = block.timestamp;
+        uint256 unlockDate = block.timestamp + (numDays * 1 days);
+
+        if (unlockDate <= (createDate + 2 days)) {
             amount = what * 0; // 100% taxed
-        } else if (block.timestamp <= (block.timestamp + 4 days)) {
+        } else if (unlockDate <= (createDate + 4 days)) {
             amount = what / 4; // 75% taxed
-        } else if (block.timestamp <= (block.timestamp + 6 days)) {
+        } else if (unlockDate <= (createDate + 6 days)) {
             amount = what / 2; // 50% taxed
-        } else if (block.timestamp <= (block.timestamp + 8 days)) {
+        } else if (unlockDate <= (createDate + 8 days)) {
             amount = (what * 3) / 4; // 25% taxed
         } else {
             amount = what; // 0% taxed or full refund
